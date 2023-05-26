@@ -1,10 +1,12 @@
 package yamlChanger
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 type PathError struct {
@@ -13,7 +15,6 @@ type PathError struct {
 func (p *PathError) Error() string {
 	return fmt.Sprintf("valuePath or part of it is empty")
 }
-
 
 func GetPathSplits(path string) (res []string, err error) {
 	splits := strings.Split(path, ".")
@@ -31,10 +32,10 @@ func GetPathSplits(path string) (res []string, err error) {
 
 }
 
-func findNodeValue(node *yaml.Node, path []string) *yaml.Node{
+func findNodeValue(node *yaml.Node, path []string) *yaml.Node {
 
 	found := false
-	for _, n := range node.Content{
+	for _, n := range node.Content {
 		if found == true {
 			if len(path) == 1 {
 				return n
@@ -62,4 +63,16 @@ func ChangeYaml(body *yaml.Node, newValue string, path []string) error {
 	node.Value = fmt.Sprintf("%s", newValue)
 
 	return nil
+}
+
+func IndentYaml(body *yaml.Node, indent int) ([]byte, error) {
+	var b bytes.Buffer
+	yamlEncoder := yaml.NewEncoder(&b)
+	yamlEncoder.SetIndent(indent)
+	err := yamlEncoder.Encode(&body)
+	if err != nil {
+		return nil, err
+	}
+
+	return b.Bytes(), nil
 }
