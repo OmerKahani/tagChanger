@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/OmerKahani/tagChanger/cmd"
 	"os"
+
+	"github.com/OmerKahani/tagChanger/cmd"
 )
 
 func main() {

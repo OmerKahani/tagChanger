@@ -3,11 +3,12 @@ package github
 import (
 	"context"
 	"errors"
+	"net/http"
+	"strings"
+
 	"github.com/bradleyfalzon/ghinstallation"
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
-	"net/http"
-	"strings"
 )
 
 func GetClient(user, pass, accessToken, sshFile string, appID, installationID int64, ctx context.Context) (*github.Client, error) {
