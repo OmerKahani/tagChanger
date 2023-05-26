@@ -100,7 +100,10 @@ func changeFile(ctx context.Context, client github.RepoService, repo, branch, fi
 	}
 
 	err = yamlChanger.ChangeYaml(&body, newValue, path)
-	if err != nil {
+	if errors.Is(err, yamlChanger.ErrAlreadyUpdated) {
+		fmt.Println("file already up to date, skipping committing to github")
+		return nil
+	} else if err != nil {
 		return err
 	}
 

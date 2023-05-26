@@ -8,6 +8,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// ErrAlreadyUpdated is a sentinel error returned when no change was made
+// because the value of the node already matches the given new value.
+var ErrAlreadyUpdated = errors.New("node value already up to date")
+
 type PathError struct{}
 
 func (p *PathError) Error() string {
@@ -55,7 +59,10 @@ func ChangeYaml(body *yaml.Node, newValue string, path []string) error {
 
 	node.Style = yaml.DoubleQuotedStyle
 	node.Tag = ""
-	node.Value = fmt.Sprintf("%s", newValue)
+	if node.Value == newValue {
+		return ErrAlreadyUpdated
+	}
+	node.Value = newValue
 
 	return nil
 }
